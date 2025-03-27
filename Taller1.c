@@ -59,7 +59,7 @@ int main() {
                 printf("Ingrese la cantidad a vender: ");
                 do {
                     do {
-                        if (scanf("%d", &cantidad) != 1) {
+                        if (scanf("%d", &cantidad) == 1) {
                             v = 1;
                             break;
 
