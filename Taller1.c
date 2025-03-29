@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main() {
-    int id = 0, stock = 0, cantidad = 0, opcion, contc = 0, contv = 0;
+    int id = -1, stock = 0, cantidad = 0, opcion, contc = 0, contv = 0;
     float precio = 0.00, total_ganancias = 0, venta = 0, descuento = 0, totalventa = 0;
     char nombre[30];    
 
@@ -20,13 +20,14 @@ int main() {
             case 1:
                 printf("Ingrese el ID del producto: ");
                 do {
-                    if (scanf("%d", &id) == 1) {
+                    if (scanf("%d", &id) == 1 && id > 0) {
                         break;
                     } else {
                         printf("ID no valido. Ingrese nuevamente: ");
                         while (getchar() != '\n'); 
+                        id = -1;
                     }
-                } while (id <= 0);
+                } while (1);
                 
                 printf("Ingrese el nombre del producto: ");
                 fflush(stdin);
@@ -39,6 +40,7 @@ int main() {
                     } else {
                         printf("Cantidad no valida. Ingrese nuevamente: ");
                         while (getchar() != '\n');
+                        stock = 0;
                     }
                 } while (1);
                     
@@ -49,6 +51,7 @@ int main() {
                     } else {
                         printf("Precio no valido. Ingrese nuevamente: ");
                         while (getchar() != '\n');
+                        precio = 0.00;
                     }
                 } while (1);
                 printf("Producto registrado con exito.\n");
@@ -56,6 +59,10 @@ int main() {
                 break;
 
             case 2:
+                venta = 0;
+                descuento = 0;
+                totalventa = 0;
+
                 if (stock <= 0) {
                     printf("No hay stock disponible para vender.\n");
                     printf("Por favor reabastezca el producto antes de vender.\n");
@@ -71,18 +78,24 @@ int main() {
                         do {
                             if (scanf("%d", &cantidad) == 1) {
                                 break;
-
                             } else {
                                 printf("Cantidad no valida. Ingrese nuevamente. ");
                                 while (getchar() != '\n'); 
+                                cantidad = 0;
                             }
                         } while (cantidad <= 0);
 
                         if(cantidad > stock) {
                             printf("No hay suficiente stock para vender.\n");
+                            printf("Ingrese una cantidad menor o igual a %d: ", stock);
                             do {
-                                printf("Ingrese una cantidad menor o igual a %d: ", stock);
-                                scanf("%d", &cantidad);
+                                if (scanf("%d", &cantidad) == 1) {
+                                    break;
+                                } else {
+                                    printf("Cantidad no valida. Ingrese nuevamente. ");
+                                    while (getchar() != '\n'); 
+                                    cantidad = 0;
+                                }
                             } while(cantidad > stock);
                         } 
                     } while(cantidad > stock);
@@ -90,15 +103,16 @@ int main() {
                     if (cantidad >= 10) {
                         stock -= cantidad;
                         venta = cantidad * precio;
-                        total_ganancias += cantidad * precio;
                         descuento = venta * 0.25;
+                        totalventa = venta - descuento;
                         printf("Venta realizada con exito.\n");
                         contc= contc + cantidad;
                         contv++;
+                        total_ganancias += totalventa;
                     } else {
                         stock -= cantidad;
                         venta = cantidad * precio;
-                        total_ganancias += cantidad * precio;
+                        total_ganancias += venta;
                         printf("Venta realizada con exito.\n");
                         contc= contc + cantidad;
                         contv++;
@@ -107,7 +121,6 @@ int main() {
                     printf("Total de la venta: $%.2f\n", venta);
                     if (cantidad >= 10) {
                         printf("Descuento aplicado: $%.2f\n", descuento);
-                        totalventa = venta - descuento;
                         printf("Total de la venta con descuento: $%.2f\n", totalventa);
                     }
                     printf("Stock restante: %d\n", stock);
@@ -116,9 +129,9 @@ int main() {
                 break;
 
             case 3:
+                cantidad = 0;
                 if (id <= 0) {
-                    printf("No hay productos registrados.\n");
-                    
+                    printf("No hay productos registrados.\n");  
                     break;
                 } else {
                     printf("Ingrese la cantidad a reabastecer: ");
@@ -142,7 +155,6 @@ int main() {
                     printf("No hay productos regisrados.\n");
                     break;
                 } else {
-                    printf("Stock disponible: %d\n", stock);
                     printf("\nInformacion del producto:\n");
                     printf("ID: %d\n", id);
                     printf("Nombre: %s", nombre);
